@@ -73,7 +73,7 @@ public class ConnectionController {
 		}	
 	
 	
-	//(Task-7)
+	//(#Task-7)
 		@GetMapping("/search")
 		public ResponseEntity<List<TableProperties>> getTablesByPattern(@RequestBody ConnectionRequest connectionRequest, ConnectionService connectionService){
 			List<TableProperties> viewsAndTables = connectionService.getTablesAndViewsByPattern(connectionRequest);

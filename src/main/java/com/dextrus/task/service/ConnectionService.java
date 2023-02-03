@@ -109,8 +109,8 @@ public class ConnectionService {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			Connection connection = DriverManager.getConnection(connectionRequest.getUrl(),
 					connectionRequest.getUsername(), connectionRequest.getPassword());
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("USE "+connectionRequest.getCatalog()+"; SELECT * FROM " +connectionRequest.getSchema()+ "." +connectionRequest.getTable());
+			PreparedStatement preparedStatement = connection.prepareStatement("USE " + connectionRequest.getCatalog()
+					+ "; SELECT * FROM " + connectionRequest.getSchema() + "." + connectionRequest.getTable());
 			ResultSet resultset = preparedStatement.executeQuery();
 			ResultSetMetaData data = resultset.getMetaData();
 			int columnCount = data.getColumnCount();
@@ -129,16 +129,44 @@ public class ConnectionService {
 		}
 		return al;
 	}
-	
-	//Task-7
+
+	// Task-6
+	public ArrayList<ArrayList<String>> getMetadataOfQuery(ConnectionRequest connectionRequest) {
+		ArrayList<ArrayList<String>> table = new ArrayList<>();
+ 		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			Connection connection = DriverManager.getConnection(connectionRequest.getUrl(),
+					connectionRequest.getUsername(), connectionRequest.getPassword());
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("use " + connectionRequest.getCatalog() + "; "+connectionRequest.getQuery());
+			ResultSetMetaData data = resultSet.getMetaData();
+			int cCount = data.getColumnCount();
+			while (resultSet.next()) {
+				ArrayList<String> columns = new ArrayList<>();
+				for (int j = 1; j <= cCount; j++) {
+					columns.add(data.getColumnName(j)+":"+resultSet.getString(j));
+				}
+				table.add(columns);
+			}
+//			tal.addAll(al);
+//			tal.addAll(al1);
+
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return table;
+	}
+
+	// Task-7
 	public List<TableProperties> getTablesAndViewsByPattern(ConnectionRequest connectionRequest) {
 		List<TableProperties> viewsAndTables = new ArrayList<>();
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			Connection connection = DriverManager.getConnection(connectionRequest.getUrl(),
 					connectionRequest.getUsername(), connectionRequest.getPassword());
-			PreparedStatement statement = connection
-					.prepareStatement("use " + connectionRequest.getCatalog() + ";" + " SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE ?");
+			PreparedStatement statement = connection.prepareStatement("use " + connectionRequest.getCatalog() + ";"
+					+ " SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE ?");
 			statement.setString(1, connectionRequest.getPattern());
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {

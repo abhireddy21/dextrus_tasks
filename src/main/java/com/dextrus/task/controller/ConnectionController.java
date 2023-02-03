@@ -66,7 +66,11 @@ public class ConnectionController {
 		} 
 	
 	//(Task-6)
-		
+		@GetMapping("/query")
+		public ResponseEntity<ArrayList<ArrayList<String>>> getQueryDetails(@RequestBody ConnectionRequest connectionRequest, ConnectionService connectionService){
+			ArrayList<ArrayList<String>> la = connectionService.getMetadataOfQuery(connectionRequest);
+			return new ResponseEntity<ArrayList<ArrayList<String>>>(la, HttpStatus.OK);
+		}	
 	
 	
 	//(Task-7)

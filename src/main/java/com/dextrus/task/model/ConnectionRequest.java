@@ -8,7 +8,18 @@ public class ConnectionRequest {
 	private String schema;
 	private String table;
 	private String pattern;
+	private String query;
 	
+	
+	
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
 	public String getPattern() {
 		return pattern;
 	}
